@@ -29,7 +29,7 @@ function GenerateGrid()
 					//parseBlue();
 					console.log(this.x / 32 + ' ' + this.y / 32);
 					this.sprite(0, 2, 1, 1);
-					Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y, z: 2}).rotation = 180;
+					Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y, z: 2}).rotation = 90;
 
 				}).bind("MouseOver", function () {
 					if (this.has("belt")) {
