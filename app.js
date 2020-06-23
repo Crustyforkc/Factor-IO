@@ -1,10 +1,12 @@
 const express = require('express')
 const app = express()
+const path = require('path')
 const host = '0.0.0.0';
+
 
 app.get('/', (req, res) => {
 	app.use(express.static('public'))
-	res.redirect('game.html')
+	res.sendFile(path.join(__dirname + '/public/game.html'));
 	
 });
 

@@ -8,6 +8,7 @@ window.onload = function () {
 };
 
 var spriterotation = 0;
+var spriterotationlock = 0;
 function LoadSprites()
 {
 	Crafty.sprite(32, "images/basic-transport-belt.png", {
@@ -31,35 +32,47 @@ function GenerateGrid()
 					//parseBlue();
 					console.log(this.x / 32 + ' ' + this.y / 32);
 					this.sprite(0, 2, 1, 1);
-					Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y, z: 2}).rotation = spriterotation;
+					Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 2});
 
 				}).bind("MouseOver", function () {
 					if (this.has("belt")) {
 						this.sprite(0, 1, 1, 1);
 					} else {
 						this.sprite(0, 1, 1, 1);
-						mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 2 }).rotation = spriterotation;
+						mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 2 });
 					}
 				}).bind("MouseOut", function () {
 					if (this.has("belt")) {
-						//mouseicon.sprite(0, 1, 1, 1)
+						mouseicon.sprite(0, 1, 1, 1)
 						this.sprite(0, 0, 1, 1);
 					} else {
 						this.sprite(0, 0, 1, 1);
-						//mouseicon.sprite(0, 1, 1, 1)
+						mouseicon.sprite(0, 1, 1, 1)
 					}
 				}).bind('KeyDown', function(e)
 				{
-					switch(e.key)
+					if(spriterotationlock == 0)
 					{
-						case Crafty.keys.R:
-							spriterotation += 90;
-							break;
+						console.log(spriterotation);
+						switch(e.key)
+						{
+							case Crafty.keys.R:
+								spriterotation += 90;
+								break;
+						}
+						spriterotationlock = 1;
+						setTimeout(UnlockRotation, 3000);
 					}
 				});
 			iso.place(i, y * 4, 0, tile);
 		}
 	}
+}
+
+function UnlockRotation()
+{
+	console.log('Unlocking rotation control');
+	spriterotationlock = 0;
 }
 function CameraAdjustments()
 {
@@ -82,22 +95,22 @@ function InitEvents()
 			console.log(dy);
 			if(Crafty.viewport.x > -1248 && dx > 0) //Bound detection on right side
 			{
-				Crafty.viewport.x -= dx;
+				Crafty.viewport.x -= dx/2;
 			}
 
 			if(Crafty.viewport.x < -96 && dx < 0) //Bound detection on right side
 			{
-				Crafty.viewport.x -= dx;
+				Crafty.viewport.x -= dx/2;
 			}
 
 			if(Crafty.viewport.y < -96 && dy < 1) //Bound detection on right side
 			{
-				Crafty.viewport.y -= dy;
+				Crafty.viewport.y -= dy/2;
 			}
 
 			if(Crafty.viewport.y > -2432 && dy > 1) //Bound detection on right side
 			{
-				Crafty.viewport.y -= dy;
+				Crafty.viewport.y -= dy/2;
 			}
 
 		};
