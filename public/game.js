@@ -6,6 +6,8 @@ window.onload = function () {
 	this.CameraAdjustments()//adjust viewport camera
 	this.InitEvents()//add events
 };
+
+var spriterotation = 0;
 function LoadSprites()
 {
 	Crafty.sprite(32, "images/basic-transport-belt.png", {
@@ -29,22 +31,30 @@ function GenerateGrid()
 					//parseBlue();
 					console.log(this.x / 32 + ' ' + this.y / 32);
 					this.sprite(0, 2, 1, 1);
-					Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y, z: 2}).rotation = 90;
+					Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y, z: 2}).rotation = spriterotation;
 
 				}).bind("MouseOver", function () {
 					if (this.has("belt")) {
 						this.sprite(0, 1, 1, 1);
 					} else {
 						this.sprite(0, 1, 1, 1);
-						mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 2 });
+						mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 2 }).rotation = spriterotation;
 					}
 				}).bind("MouseOut", function () {
 					if (this.has("belt")) {
-						mouseicon.sprite(0, 1, 1, 1)
+						//mouseicon.sprite(0, 1, 1, 1)
 						this.sprite(0, 0, 1, 1);
 					} else {
 						this.sprite(0, 0, 1, 1);
-						mouseicon.sprite(0, 1, 1, 1)
+						//mouseicon.sprite(0, 1, 1, 1)
+					}
+				}).bind('KeyDown', function(e)
+				{
+					switch(e.key)
+					{
+						case Crafty.keys.R:
+							spriterotation += 90;
+							break;
 					}
 				});
 			iso.place(i, y * 4, 0, tile);
