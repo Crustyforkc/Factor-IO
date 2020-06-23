@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const host = '0.0.0.0';
 
 app.get('/', (req, res) => {
 	app.use(express.static('public'))
@@ -7,6 +8,6 @@ app.get('/', (req, res) => {
 	
 });
 
-
-app.listen(3000, console.log('Server on 3000'));
+app.listen(process.env.PORT || 3000, host, 
+	() => console.log("Server is running..."));
 
