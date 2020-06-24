@@ -6,7 +6,7 @@ const host = '0.0.0.0';
 
 app.get('/', (req, res) => {
 	app.use(express.static('public'))
-	res.sendFile(path.join(__dirname + '/public/images/Background.png'));
+	app.use(express.static('public/images'))
 	res.sendFile(path.join(__dirname + '/public/game.html'));
 	
 });
