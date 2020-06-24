@@ -34,7 +34,6 @@ function GenerateGrid()
 					switch(spriterotation)
 					{
 						case 0:
-							console.log("HI");
 							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 2});
 							break;
 						case 90:
@@ -47,7 +46,6 @@ function GenerateGrid()
 							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y + 32, z: 2}).rotation = spriterotation;
 							break;	
 					}
-					//GenerateTile('belt');
 
 				}).bind("MouseOver", function () {
 					if (this.has("belt")) {
