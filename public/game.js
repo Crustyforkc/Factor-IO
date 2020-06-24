@@ -30,16 +30,49 @@ function GenerateGrid()
 				.bind("Click", function (e) {
 
 					//parseBlue();
-					console.log(this.x / 32 + ' ' + this.y / 32);
-					this.sprite(0, 2, 1, 1);
-					Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 2});
+					//console.log(this.x / 32 + ' ' + this.y / 32);
+					switch(spriterotation)
+					{
+						case 0:
+							console.log("HI");
+							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 2});
+							break;
+						case 90:
+							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y, z: 2}).rotation = spriterotation;
+							break;
+						case 180:
+							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y + 32, z: 2}).rotation = spriterotation;
+							break;
+						case 270:
+							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y + 32, z: 2}).rotation = spriterotation;
+							break;	
+					}
+					//GenerateTile('belt');
 
 				}).bind("MouseOver", function () {
 					if (this.has("belt")) {
 						this.sprite(0, 1, 1, 1);
 					} else {
 						this.sprite(0, 1, 1, 1);
-						mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 2 });
+						switch(spriterotation)
+						{
+							case 0:
+								console.log("HI");
+								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 2});
+								break;
+							case 90:
+								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y, z: 2});
+								mouseicon.rotation = spriterotation;
+								break;
+							case 180:
+								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y + 32, z: 2});
+								mouseicon.rotation = spriterotation;
+								break;
+							case 270:
+								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y + 32, z: 2});
+								mouseicon.rotation = spriterotation;
+								break;	
+						}
 					}
 				}).bind("MouseOut", function () {
 					if (this.has("belt")) {
@@ -61,7 +94,11 @@ function GenerateGrid()
 								break;
 						}
 						spriterotationlock = 1;
-						setTimeout(UnlockRotation, 3000);
+						setTimeout(UnlockRotation, 100);
+					}
+					if(spriterotation > 270)
+					{
+						spriterotation = 0
 					}
 				});
 			iso.place(i, y * 4, 0, tile);
