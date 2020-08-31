@@ -37,13 +37,13 @@ function GenerateGrid()
 							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 2});
 							break;
 						case 90:
-							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y, z: 2}).rotation = spriterotation;
+							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2}).rotation = spriterotation;
 							break;
 						case 180:
-							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y + 32, z: 2}).rotation = spriterotation;
+							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2}).rotation = spriterotation;
 							break;
 						case 270:
-							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y + 32, z: 2}).rotation = spriterotation;
+							Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2}).rotation = spriterotation;
 							break;	
 					}
 
@@ -56,18 +56,18 @@ function GenerateGrid()
 						{
 							case 0:
 								console.log("HI");
-								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 2});
+								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2});
 								break;
 							case 90:
-								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y, z: 2});
+								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2});
 								mouseicon.rotation = spriterotation;
 								break;
 							case 180:
-								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x + 32, y: this.y + 32, z: 2});
+								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2});
 								mouseicon.rotation = spriterotation;
 								break;
 							case 270:
-								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y + 32, z: 2});
+								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2});
 								mouseicon.rotation = spriterotation;
 								break;	
 						}
@@ -91,8 +91,11 @@ function GenerateGrid()
 								spriterotation += 90;
 								break;
 						}
+						mouseicon.origin("center");
+						mouseicon.rotation = spriterotation;
+
 						spriterotationlock = 1;
-						setTimeout(UnlockRotation, 100);
+						setTimeout(UnlockRotation, 50);
 					}
 					if(spriterotation > 270)
 					{
