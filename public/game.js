@@ -6,7 +6,6 @@ window.onload = function () {
 	this.CameraAdjustments()//adjust viewport camera
 	this.InitEvents()//add events
 };
-
 var spriterotation = 0;
 var spriterotationlock = 0;
 function LoadSprites()
