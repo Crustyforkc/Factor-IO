@@ -1,6 +1,7 @@
 window.onload = function () {
 	Crafty.init();
-
+	var socket = io();
+	
 	this.LoadSprites() //load sprites
 	this.GenerateGrid() //load world
 	this.CameraAdjustments()//adjust viewport camera
@@ -14,11 +15,11 @@ function LoadSprites()
 		belt: [0, 0, 1, 1],
 		empty: [0, 1, 1, 1]
 	});
-	Crafty.sprite(32, "images/BackGround.png", {
+	Crafty.sprite(32, "images/Background.png", {
 		grid: [0, 0, 1, 1],
 	});
 	Crafty.sprite(32, "images/Overlay.png", {
-		overlay_valid: [0, 0, 1, 1],
+		overlay_valid: [1, 0, 1, 1],
 		overlay_invalid: [0, 1, 1, 1],
 	});
 }
@@ -32,7 +33,6 @@ function GenerateGrid()
 		for (var y = 0; y <= 105; y++) {
 			var tile = Crafty.e("2D, Canvas, " + "grid" + ", Mouse").attr({ x: y, y: i + 1 * y + 1, placed: 0 }).areaMap([0, 0], [32, 32], [32, 0], [0, 0], [32, 32], [0, 32])
 				.bind("Click", function (e) {
-
 
 					if(this.placed == 0)
 					{
