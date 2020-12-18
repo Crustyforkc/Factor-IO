@@ -1,11 +1,11 @@
 const express = require('express')
 const app = express()
 const path = require('path')
+const socketio = require('socket.io')
 const Blueprint = require('factorio-blueprint');
 const host = '0.0.0.0';
 
 var http = require('http').createServer(app);
-var io = require('socket.io')(http);
 
 
 
@@ -18,13 +18,15 @@ app.get('/', (req, res) => {
 	//console.log(myBlueprint.encode());
 });
 
-app.listen(process.env.PORT || 3000, host, () => console.log("Server is running..."));
+const server = app.listen(process.env.PORT || 3000, host, () => console.log("Server is running..."));
 
+
+const io = socketio(server)
 
 io.on('connection', (socket) => {
 	console.log('a user connected');
   });
 
-  http.listen(3000, () => {
+/*  http.listen(3000, () => {
 	console.log('listening on *:3000');
-  });
+  }); */
