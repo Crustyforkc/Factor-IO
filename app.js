@@ -23,10 +23,41 @@ const server = app.listen(process.env.PORT || 3000, host, () => console.log("Ser
 
 const io = socketio(server)
 
+var maxClient = 5;
+var curClient = 0;
 io.on('connection', (socket) => {
-	console.log('a user connected');
+	curClient++;
+	console.log("Current Connections: ", curClient, "/", maxClient);
+
+	socket.on('disconnect', ()=> {
+		console.log('user disconnected');
+		curClient--;
+	});
   });
 
-/*  http.listen(3000, () => {
-	console.log('listening on *:3000');
-  }); */
+
+
+  var mysql = require('mysql');
+
+var con = mysql.createConnection({
+  host: "192.168.86.30",
+  user: "ralph",
+  password: "tacomantoast",
+  database: "Factor-IO"
+});
+
+con.connect(function(err) {
+	var ii = 0;
+  if (err) throw err;
+  console.log("Connected!");
+  for(var i =0; i < 10000; i++)
+  {
+  var sql = "INSERT INTO new_table (Test) VALUES ?";
+  var values = [[ii++]];
+  con.query(sql, [values], function (err, result) {
+    if (err) throw err;
+	console.log("1 record inserted");
+	
+  });
+}
+});
