@@ -32,7 +32,7 @@ io.on('connection', (socket) =>
   curClient++;
   console.log("Current Connections: ", curClient, "/", maxClient);
   var sql = "INSERT INTO blueprints (id) VALUES ?";
-  var values = [[curClient]];
+  var values = [[Math.random() * Math.floor(5000)]];
   db.query(sql, [values], function (err, result)
   {
     if (err) throw err;

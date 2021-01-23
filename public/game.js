@@ -9,6 +9,7 @@ window.onload = function () {
 };
 var spriterotation = 0;
 var spriterotationlock = 0;
+var tileSize = 32;
 function LoadSprites()
 {
 	Crafty.sprite(32, "images/basic-transport-belt.png", {
@@ -40,17 +41,24 @@ function GenerateGrid()
 						switch(spriterotation)
 						{
 							case 0:
-								gridentities[this.y][this.x] = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).addComponent("belt").attr({ x: this.x, y: this.y, z: 2});
-								console.log(gridentities[this.y][this.x]);
+								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas, belt, solid, bush").addComponent("belt").attr({ x: this.x, y: this.y, z: 2});
+								console.log(gridentities[this.y / tileSize][this.x / tileSize]);
 								break;
 							case 90:
-								gridentities[this.y][this.x] = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2}).rotation = spriterotation;
+								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas, belt, solid, bush").addComponent("belt").attr({ x: this.x, y: this.y, z: 2})
+								console.log(gridentities[this.y / tileSize][this.x / tileSize]);
+								gridentities[this.y / tileSize][this.x / tileSize].origin("center").rotation = spriterotation;
+
 								break;
 							case 180:
-								gridentities[this.y][this.x] = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2}).rotation = spriterotation;
+								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas, belt, solid, bush").addComponent("belt").attr({ x: this.x, y: this.y, z: 2})
+								console.log(gridentities[this.y / tileSize][this.x / tileSize]);
+								gridentities[this.y / tileSize][this.x / tileSize].origin("center").rotation = spriterotation;
 								break;
 							case 270:
-								gridentities[this.y][this.x] = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2}).rotation = spriterotation;
+								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas, belt, solid, bush").addComponent("belt").attr({ x: this.x, y: this.y, z: 2})
+								console.log(gridentities[this.y / tileSize][this.x / tileSize]);
+								gridentities[this.y / tileSize][this.x / tileSize].origin("center").rotation = spriterotation;
 								break;	
 						}
 						this.placed = 1;
@@ -64,7 +72,8 @@ function GenerateGrid()
 					else
 					{
 						console.log("Right button");
-						console.log(gridentities[this.y][this.x]);
+						this.placed = 0;
+						console.log(gridentities[this.y / tileSize][this.x / tileSize].destroy());
 					}
 
 				}).bind("MouseOver", function () {
