@@ -28,34 +28,46 @@ function GenerateGrid()
 	iso = Crafty.isometric.size(32);
 	var mouseicon;
 	var mouseoverlay;
+	var gridentities = [];
 	var z = 0;
 	for (var i = 105; i >= 0; i--) {
 		for (var y = 0; y <= 105; y++) {
+			gridentities[i] = new Array();
 			var tile = Crafty.e("2D, Canvas, " + "grid" + ", Mouse").attr({ x: y, y: i + 1 * y + 1, placed: 0 }).areaMap([0, 0], [32, 32], [32, 0], [0, 0], [32, 32], [0, 32])
 				.bind("Click", function (e) {
-
 					if(this.placed == 0)
 					{
 						switch(spriterotation)
 						{
 							case 0:
-								Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).addComponent("belt").attr({ x: this.x, y: this.y, z: 2});
+								gridentities[this.y][this.x] = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).addComponent("belt").attr({ x: this.x, y: this.y, z: 2});
+								console.log(gridentities[this.y][this.x]);
 								break;
 							case 90:
-								Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2}).rotation = spriterotation;
+								gridentities[this.y][this.x] = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2}).rotation = spriterotation;
 								break;
 							case 180:
-								Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2}).rotation = spriterotation;
+								gridentities[this.y][this.x] = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2}).rotation = spriterotation;
 								break;
 							case 270:
-								Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2}).rotation = spriterotation;
+								gridentities[this.y][this.x] = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2}).rotation = spriterotation;
 								break;	
 						}
 						this.placed = 1;
 					}
 
+				}).bind("MouseUp", function(e) {
+					if(e.mouseButton == Crafty.mouseButtons.LEFT)
+					{
+						console.log("Left button");
+					}
+					else
+					{
+						console.log("Right button");
+						console.log(gridentities[this.y][this.x]);
+					}
+
 				}).bind("MouseOver", function () {
-					console.log(this.z);
 					if (this.placed == 1) {
 						this.sprite(0, 1, 1, 1);
 						mouseoverlay = Crafty.e("2D, Canvas, overlay_invalid, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 3});
@@ -140,8 +152,7 @@ function InitEvents()
 			var dx = base.x - e.clientX,
 				dy = base.y - e.clientY;
 			base = { x: e.clientX, y: e.clientY };
-			console.log(Crafty.viewport.y);
-			console.log(dy);
+
 			if(Crafty.viewport.x > -1248 && dx > 0) //Bound detection on right side
 			{
 				Crafty.viewport.x -= dx/2;
