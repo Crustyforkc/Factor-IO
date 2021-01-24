@@ -10,11 +10,15 @@ window.onload = function () {
 var spriterotation = 0;
 var spriterotationlock = 0;
 var tileSize = 32;
+var currentitem = "belt";
 function LoadSprites()
 {
 	Crafty.sprite(32, "images/basic-transport-belt.png", {
 		belt: [0, 0, 1, 1],
 		empty: [0, 1, 1, 1]
+	});
+	Crafty.sprite(32, "images/inserter.png", {
+		inserter: [0, 0, 1, 1],
 	});
 	Crafty.sprite(32, "images/Background.png", {
 		grid: [0, 0, 1, 1],
@@ -23,40 +27,58 @@ function LoadSprites()
 		overlay_valid: [1, 0, 1, 1],
 		overlay_invalid: [0, 1, 1, 1],
 	});
+	Crafty.sprite(445, 420, "images/item-menu_blank.png", {
+		item_menu: [0,0, 1, 1]
+	});
+	Crafty.sprite(38, 38, "images/item-menu-belt.png", {
+		item_menu_belt: [0,0, 1, 1]
+	});
+	Crafty.sprite(38, 38, "images/item-menu-inserter.png", {
+		item_menu_inserter: [0,0, 1, 1]
+	});
+
+
 }
+
+var itemlist = [];
+var itemmenu;
+var menuopen = false;
+var gridentities = [];
+
 function GenerateGrid()
 {
 	iso = Crafty.isometric.size(32);
 	var mouseicon;
 	var mouseoverlay;
-	var gridentities = [];
+
 	var z = 0;
 	for (var i = 105; i >= 0; i--) {
 		for (var y = 0; y <= 105; y++) {
 			gridentities[i] = new Array();
 			var tile = Crafty.e("2D, Canvas, " + "grid" + ", Mouse").attr({ x: y, y: i + 1 * y + 1, placed: 0 }).areaMap([0, 0], [32, 32], [32, 0], [0, 0], [32, 32], [0, 32])
-				.bind("Click", function (e) {
+				.bind("Click", function (e) 
+				{
 					if(this.placed == 0)
 					{
 						switch(spriterotation)
 						{
 							case 0:
-								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas, belt, solid, bush").addComponent("belt").attr({ x: this.x, y: this.y, z: 2});
+								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas, " + currentitem  + ", solid, bush").attr({ x: this.x, y: this.y, z: 2});
 								console.log(gridentities[this.y / tileSize][this.x / tileSize]);
 								break;
 							case 90:
-								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas, belt, solid, bush").addComponent("belt").attr({ x: this.x, y: this.y, z: 2})
+								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas," + currentitem  + ", solid, bush").attr({ x: this.x, y: this.y, z: 2})
 								console.log(gridentities[this.y / tileSize][this.x / tileSize]);
 								gridentities[this.y / tileSize][this.x / tileSize].origin("center").rotation = spriterotation;
 
 								break;
 							case 180:
-								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas, belt, solid, bush").addComponent("belt").attr({ x: this.x, y: this.y, z: 2})
+								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas," + currentitem  + ", solid, bush").attr({ x: this.x, y: this.y, z: 2})
 								console.log(gridentities[this.y / tileSize][this.x / tileSize]);
 								gridentities[this.y / tileSize][this.x / tileSize].origin("center").rotation = spriterotation;
 								break;
 							case 270:
-								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas, belt, solid, bush").addComponent("belt").attr({ x: this.x, y: this.y, z: 2})
+								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas," + currentitem  + ", solid, bush").attr({ x: this.x, y: this.y, z: 2})
 								console.log(gridentities[this.y / tileSize][this.x / tileSize]);
 								gridentities[this.y / tileSize][this.x / tileSize].origin("center").rotation = spriterotation;
 								break;	
@@ -64,7 +86,9 @@ function GenerateGrid()
 						this.placed = 1;
 					}
 
-				}).bind("MouseUp", function(e) {
+				})
+				.bind("MouseUp", function(e)
+				{
 					if(e.mouseButton == Crafty.mouseButtons.LEFT)
 					{
 						console.log("Left button");
@@ -76,34 +100,38 @@ function GenerateGrid()
 						console.log(gridentities[this.y / tileSize][this.x / tileSize].destroy());
 					}
 
-				}).bind("MouseOver", function () {
+				})
+				.bind("MouseOver", function () 
+				{
 					if (this.placed == 1) {
 						this.sprite(0, 1, 1, 1);
-						mouseoverlay = Crafty.e("2D, Canvas, overlay_invalid, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 3});
+						mouseoverlay = Crafty.e("2D, Canvas, overlay_invalid, solid, bush").attr({ x: this.x, y: this.y, z: 3});
 					} else {
 						this.has
 						mouseoverlay = Crafty.e("2D, Canvas, overlay_valid, solid, bush" + Crafty.math.randomInt(1, 2)).attr({ x: this.x, y: this.y, z: 3});
 						switch(spriterotation)
 						{
 							case 0:
-								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2});
+								mouseicon = Crafty.e("2D, Canvas, " + currentitem  + ", solid, bush").origin("center").attr({ x: this.x, y: this.y, z: 2});
 								break;
 							case 90:
-								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2});
+								mouseicon = Crafty.e("2D, Canvas, " + currentitem  + ", solid, bush").origin("center").attr({ x: this.x, y: this.y, z: 2});
 								mouseicon.rotation = spriterotation;
 								break;
 							case 180:
-								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2});
+								mouseicon = Crafty.e("2D, Canvas, " + currentitem  + ", solid, bush").origin("center").attr({ x: this.x, y: this.y, z: 2});
 								mouseicon.rotation = spriterotation;
 								break;
 							case 270:
-								mouseicon = Crafty.e("2D, Canvas, belt, solid, bush" + Crafty.math.randomInt(1, 2)).origin("center").attr({ x: this.x, y: this.y, z: 2});
+								mouseicon = Crafty.e("2D, Canvas, " + currentitem  + ", solid, bush").origin("center").attr({ x: this.x, y: this.y, z: 2});
 								mouseicon.rotation = spriterotation;
 								break;	
 						}
 					}
-				}).bind("MouseOut", function () {
-					if (this.has("belt")) {
+				})
+				.bind("MouseOut", function () 
+				{
+					if (this.has(currentitem)) {
 						mouseicon.destroy();
 						mouseoverlay.destroy();
 						this.sprite(0, 0, 1, 1)
@@ -112,7 +140,8 @@ function GenerateGrid()
 						mouseicon.destroy();
 						mouseoverlay.destroy();
 					}
-				}).bind('KeyDown', function(e)
+				})
+				.bind('KeyDown', function(e)
 				{
 					if(spriterotationlock == 0)
 					{
@@ -121,6 +150,28 @@ function GenerateGrid()
 						{
 							case Crafty.keys.R:
 								spriterotation += 90;
+								break;
+							case Crafty.keys.E:
+								if(menuopen == false)
+								{
+									console.log("x: " + window.innerWidth);
+									console.log("y: " + window.innerHeight);
+									var x = Math.abs(Crafty.viewport.x) + (window.innerWidth / 2) - 222.5;
+									var y = Math.abs(Crafty.viewport.y) + (window.innerHeight / 2) - 210
+									itemmenu = Crafty.e("2D, Canvas, " + "item_menu").attr({ x: x, y: y, z: 4});
+									menuopen = true;
+									var itemx = x + 24;
+									var itemy = y + 118;
+
+									BuildMenu("item_menu_belt", itemx, itemy, "belt");
+									BuildMenu("item_menu_inserter", itemx, itemy + 38, "inserter");
+
+								}
+								else
+								{
+									CleanMenu();
+									menuopen = false
+								}
 								break;
 						}
 						mouseicon.origin("center");
@@ -146,7 +197,7 @@ function UnlockRotation()
 }
 function CameraAdjustments()
 {
-	Crafty.viewport.scale(1.25);
+	Crafty.viewport.scale(1);
 	Crafty.viewport.x = -400;
 	Crafty.viewport.y = -1100;
 }
@@ -188,4 +239,27 @@ function InitEvents()
 		Crafty.removeEvent(this, Crafty.stage.elem, "mousemove", scroll);
 		});
 	});
+}
+
+var itemcount = 0;
+function BuildMenu(item, x, y, itemshorthand)
+{
+	itemlist[itemcount++] = Crafty.e("2D, Canvas, " + item + ", Mouse").attr({ x: x, y: y, z: 5})
+	.bind("Click", function(e)
+	{
+		CleanMenu();
+		currentitem = itemshorthand;
+	});
+}
+
+function CleanMenu()
+{
+	for(var i = 0; i < 2; i++)
+	{
+		console.log(i);
+		itemlist[i].destroy();
+	}
+	itemmenu.destroy();
+	menuopen = false;
+	itemcount = 0;
 }
