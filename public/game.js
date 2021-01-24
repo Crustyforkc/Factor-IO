@@ -20,12 +20,30 @@ function LoadSprites()
 	Crafty.sprite(32, "images/entities/inserter.png", {
 		inserter: [0, 0, 1, 1],
 	});
+	Crafty.sprite(32, "images/entities/burner-inserter.png", {
+		burner_inserter: [0, 0, 1, 1],
+	});
 	Crafty.sprite(32, "images/entities/Background.png", {
 		grid: [0, 0, 1, 1],
 	});
 	Crafty.sprite(32, "images/entities/Overlay.png", {
 		overlay_valid: [1, 0, 1, 1],
 		overlay_invalid: [0, 1, 1, 1],
+	});
+	Crafty.sprite(32, "images/entities/wooden-chest.png", {
+		wooden_chest: [0, 0, 1, 1],
+	});
+	Crafty.sprite(32, "images/entities/iron-chest.png", {
+		iron_chest: [0, 0, 1, 1],
+	});
+	Crafty.sprite(32, "images/entities/pipe.png", {
+		pipe: [0, 0, 1, 1],
+	});
+	Crafty.sprite(32, "images/entities/pipe-ground.png", {
+		pipe_ground: [0, 0, 1, 1],
+	});
+	Crafty.sprite(32, 97, "images/entities/small-electric-pole.png", {
+		small_electric_pole: [0, 0, 1, 1],
 	});
 	Crafty.sprite(445, 420, "images/item-menu_blank.png", {
 		item_menu: [0,0, 1, 1]
@@ -36,8 +54,8 @@ function LoadSprites()
 	Crafty.sprite(38, 38, "images/menu/item-menu-inserter.png", {
 		item_menu_inserter: [0,0, 1, 1]
 	});
-	Crafty.sprite(38, 38, "images/menu/item-menu-combustion-inserter.png", {
-		item_menu_cumbustion_inserter: [0,0, 1, 1]
+	Crafty.sprite(38, 38, "images/menu/item-menu-burner-inserter.png", {
+		item_menu_burner_inserter: [0,0, 1, 1]
 	});
 	Crafty.sprite(38, 38, "images/menu/item-menu-wooden-chest.png", {
 		item_menu_wooden_chest: [0,0, 1, 1]
@@ -182,13 +200,13 @@ function GenerateGrid()
 									var itemy = y + 118;
 
 									BuildMenu("item_menu_inserter", itemx, itemy, "inserter");
-									BuildMenu("item_menu_combustion_inserter", itemx + 38, itemy, "combustion_inserter");
+									BuildMenu("item_menu_burner_inserter", itemx + 38, itemy, "burner_inserter");
 									BuildMenu("item_menu_belt", itemx, itemy + 38, "belt");
 									BuildMenu("item_menu_wooden_chest", itemx, itemy + 76, "wooden_chest");
 									BuildMenu("item_menu_iron_chest", itemx + 38, itemy + 76, "iron_chest");
 									BuildMenu("item_menu_pipe", itemx, itemy + 114, "pipe");
 									BuildMenu("item_menu_pipe_ground", itemx + 38, itemy + 114, "pipe_ground");
-									BuildMenu("item_menu_small_electric_pole", itemx, itemy + 158, "small_electric_pole");
+									BuildMenu("item_menu_small_electric_pole", itemx, itemy + 152, "small_electric_pole");
 									
 
 								}
