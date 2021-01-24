@@ -13,28 +13,46 @@ var tileSize = 32;
 var currentitem = "belt";
 function LoadSprites()
 {
-	Crafty.sprite(32, "images/basic-transport-belt.png", {
+	Crafty.sprite(32, "images/entities/basic-transport-belt.png", {
 		belt: [0, 0, 1, 1],
 		empty: [0, 1, 1, 1]
 	});
-	Crafty.sprite(32, "images/inserter.png", {
+	Crafty.sprite(32, "images/entities/inserter.png", {
 		inserter: [0, 0, 1, 1],
 	});
-	Crafty.sprite(32, "images/Background.png", {
+	Crafty.sprite(32, "images/entities/Background.png", {
 		grid: [0, 0, 1, 1],
 	});
-	Crafty.sprite(32, "images/Overlay.png", {
+	Crafty.sprite(32, "images/entities/Overlay.png", {
 		overlay_valid: [1, 0, 1, 1],
 		overlay_invalid: [0, 1, 1, 1],
 	});
 	Crafty.sprite(445, 420, "images/item-menu_blank.png", {
 		item_menu: [0,0, 1, 1]
 	});
-	Crafty.sprite(38, 38, "images/item-menu-belt.png", {
+	Crafty.sprite(38, 38, "images/menu/item-menu-belt.png", {
 		item_menu_belt: [0,0, 1, 1]
 	});
-	Crafty.sprite(38, 38, "images/item-menu-inserter.png", {
+	Crafty.sprite(38, 38, "images/menu/item-menu-inserter.png", {
 		item_menu_inserter: [0,0, 1, 1]
+	});
+	Crafty.sprite(38, 38, "images/menu/item-menu-combustion-inserter.png", {
+		item_menu_cumbustion_inserter: [0,0, 1, 1]
+	});
+	Crafty.sprite(38, 38, "images/menu/item-menu-wooden-chest.png", {
+		item_menu_wooden_chest: [0,0, 1, 1]
+	});
+	Crafty.sprite(38, 38, "images/menu/item-menu-iron-chest.png", {
+		item_menu_iron_chest: [0,0, 1, 1]
+	});
+	Crafty.sprite(38, 38, "images/menu/item-menu-pipe.png", {
+		item_menu_pipe: [0,0, 1, 1]
+	});
+	Crafty.sprite(38, 38, "images/menu/item-menu-pipe-ground.png", {
+		item_menu_pipe_ground: [0,0, 1, 1]
+	});
+	Crafty.sprite(38, 38, "images/menu/item-menu-small-electric-pole.png", {
+		item_menu_small_electric_pole: [0,0, 1, 1]
 	});
 
 
@@ -163,8 +181,15 @@ function GenerateGrid()
 									var itemx = x + 24;
 									var itemy = y + 118;
 
-									BuildMenu("item_menu_belt", itemx, itemy, "belt");
-									BuildMenu("item_menu_inserter", itemx, itemy + 38, "inserter");
+									BuildMenu("item_menu_inserter", itemx, itemy, "inserter");
+									BuildMenu("item_menu_combustion_inserter", itemx + 38, itemy, "combustion_inserter");
+									BuildMenu("item_menu_belt", itemx, itemy + 38, "belt");
+									BuildMenu("item_menu_wooden_chest", itemx, itemy + 76, "wooden_chest");
+									BuildMenu("item_menu_iron_chest", itemx + 38, itemy + 76, "iron_chest");
+									BuildMenu("item_menu_pipe", itemx, itemy + 114, "pipe");
+									BuildMenu("item_menu_pipe_ground", itemx + 38, itemy + 114, "pipe_ground");
+									BuildMenu("item_menu_small_electric_pole", itemx, itemy + 158, "small_electric_pole");
+									
 
 								}
 								else
@@ -254,7 +279,7 @@ function BuildMenu(item, x, y, itemshorthand)
 
 function CleanMenu()
 {
-	for(var i = 0; i < 2; i++)
+	for(var i = 0; i < itemcount; i++)
 	{
 		console.log(i);
 		itemlist[i].destroy();
