@@ -1,7 +1,5 @@
 window.onload = function () {
 	Crafty.init();
-	var socket = io();
-	
 	this.LoadSprites() //load sprites
 	this.GenerateGrid() //load world
 	this.CameraAdjustments()//adjust viewport camera
@@ -94,6 +92,7 @@ function GenerateGrid()
 			var tile = Crafty.e("2D, Canvas, " + "grid" + ", Mouse").attr({ x: y, y: i + 1 * y + 1, placed: 0 }).areaMap([0, 0], [32, 32], [32, 0], [0, 0], [32, 32], [0, 32])
 				.bind("Click", function (e) 
 				{
+					socket.emit('test', "hello");
 					if(this.placed == 0)
 					{
 						switch(spriterotation)
@@ -185,6 +184,7 @@ function GenerateGrid()
 						switch(e.key)
 						{
 							case Crafty.keys.R:
+								if(currentitem != "small_electric_pole" && currentitem != "wooden_chest" && currentitem != "iron_chest")
 								spriterotation += 90;
 								break;
 							case Crafty.keys.E:
@@ -292,6 +292,8 @@ function BuildMenu(item, x, y, itemshorthand)
 	{
 		CleanMenu();
 		currentitem = itemshorthand;
+		if(currentitem == "small_electric_pole" || currentitem == "wooden_chest" || currentitem == "iron_chest")
+			spriterotation = 0;
 	});
 }
 
@@ -306,3 +308,4 @@ function CleanMenu()
 	menuopen = false;
 	itemcount = 0;
 }
+

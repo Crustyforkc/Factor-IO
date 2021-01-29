@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 const path = require('path')
-const socketio = require('socket.io')
 const Blueprint = require('factorio-blueprint');
 const host = '0.0.0.0';
 
@@ -21,9 +20,7 @@ app.get('/', (req, res) =>
 });
 
 const server = app.listen(process.env.PORT || 3000, host, () => console.log("Server is running..."));
-
-
-const io = socketio(server)
+const io = require('socket.io')(server);
 
 var maxClient = 5;
 var curClient = 0;
@@ -38,12 +35,17 @@ io.on('connection', (socket) =>
     if (err) throw err;
   });
 
+  socket.on('test', (msg) =>{
+    console.log('Message: ', msg);
+  });
+
   socket.on('disconnect', ()=> 
   {
 		console.log('user disconnected');
 		curClient--;
 	});
 });
+
 
 
 
