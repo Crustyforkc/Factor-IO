@@ -8,11 +8,11 @@ window.onload = function () {
 var spriterotation = 0;
 var spriterotationlock = 0;
 var tileSize = 32;
-var currentitem = "belt";
+var currentitem = "transport_belt";
 function LoadSprites()
 {
 	Crafty.sprite(32, "images/entities/basic-transport-belt.png", {
-		belt: [0, 0, 1, 1],
+		transport_belt: [0, 0, 1, 1],
 		empty: [0, 1, 1, 1]
 	});
 	Crafty.sprite(32, "images/entities/inserter.png", {
@@ -92,7 +92,6 @@ function GenerateGrid()
 			var tile = Crafty.e("2D, Canvas, " + "grid" + ", Mouse").attr({ x: y, y: i + 1 * y + 1, placed: 0 }).areaMap([0, 0], [32, 32], [32, 0], [0, 0], [32, 32], [0, 32])
 				.bind("Click", function (e) 
 				{
-					socket.emit('test', "hello");
 					if(this.placed == 0)
 					{
 						switch(spriterotation)
@@ -118,6 +117,7 @@ function GenerateGrid()
 								gridentities[this.y / tileSize][this.x / tileSize].origin("center").rotation = spriterotation;
 								break;	
 						}
+						socket.emit('printInsert', {currentitem: currentitem,x: this.x/32, y: this.y/32, rotation: spriterotation});
 						this.placed = 1;
 					}
 
@@ -201,7 +201,7 @@ function GenerateGrid()
 
 									BuildMenu("item_menu_inserter", itemx, itemy, "inserter");
 									BuildMenu("item_menu_burner_inserter", itemx + 38, itemy, "burner_inserter");
-									BuildMenu("item_menu_belt", itemx, itemy + 38, "belt");
+									BuildMenu("item_menu_belt", itemx, itemy + 38, "transport_belt");
 									BuildMenu("item_menu_wooden_chest", itemx, itemy + 76, "wooden_chest");
 									BuildMenu("item_menu_iron_chest", itemx + 38, itemy + 76, "iron_chest");
 									BuildMenu("item_menu_pipe", itemx, itemy + 114, "pipe");

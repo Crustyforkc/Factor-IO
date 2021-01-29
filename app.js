@@ -6,6 +6,7 @@ const host = '0.0.0.0';
 
 var http = require('http').createServer(app);
 var db = require('./db');
+const { stringify } = require('querystring');
 
 
 
@@ -26,17 +27,42 @@ var maxClient = 5;
 var curClient = 0;
 io.on('connection', (socket) => 
 {
+  const myBlueprint = new Blueprint();
+
   curClient++;
   console.log("Current Connections: ", curClient, "/", maxClient);
   var sql = "INSERT INTO blueprints (id) VALUES ?";
-  var values = [[Math.random() * Math.floor(5000)]];
+  var values = [[Math.random() * Math.floor(50000)]];
   db.query(sql, [values], function (err, result)
   {
     if (err) throw err;
   });
 
-  socket.on('test', (msg) =>{
-    console.log('Message: ', msg);
+  socket.on('printInsert', (msg) =>{
+    msg.currentitem.replace('_', '-');
+    console.log('Item: ', msg.currentitem);
+    console.log('X: ', msg.x);
+    console.log('Y: ', msg.y);
+    console.log('Rotation: ', msg.rotation);
+    var roation;
+    switch(msg.rotation)
+    {
+      case 0:
+        rotation = Blueprint.RIGHT;
+        break
+      case 90:
+        rotation = Blueprint.DOWN;
+        break;
+      case 180:
+        rotation = Blueprint.LEFT
+        break;
+      case 270:
+        rotation = Blueprint.UP;
+        break;
+    }
+
+    myBlueprint.createEntity(msg.currentitem, {x: msg.x, y: msg.y}, rotation);
+    console.log(myBlueprint.encode());
   });
 
   socket.on('disconnect', ()=> 
