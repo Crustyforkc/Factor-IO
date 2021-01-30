@@ -62,13 +62,13 @@ io.on('connection', (socket) =>
     }
 
     myBlueprint.createEntity(msg.currentitem, {x: msg.x, y: msg.y}, rotation);
-    console.log(myBlueprint.encode());
   });
 
   socket.on('disconnect', ()=> 
   {
 		console.log('user disconnected');
-		curClient--;
+    curClient--;
+    console.log(myBlueprint.encode());
 	});
 });
 

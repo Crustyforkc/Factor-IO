@@ -78,18 +78,23 @@ var itemlist = [];
 var itemmenu;
 var menuopen = false;
 var gridentities = [];
+var tile = [];
 
 function GenerateGrid()
 {
 	iso = Crafty.isometric.size(32);
 	var mouseicon;
 	var mouseoverlay;
+	for(var i = 0; i < 106; i++)
+	{
+		tile[i] = [];
+	}
 
 	var z = 0;
 	for (var i = 105; i >= 0; i--) {
 		for (var y = 0; y <= 105; y++) {
 			gridentities[i] = new Array();
-			var tile = Crafty.e("2D, Canvas, " + "grid" + ", Mouse").attr({ x: y, y: i + 1 * y + 1, placed: 0 }).areaMap([0, 0], [32, 32], [32, 0], [0, 0], [32, 32], [0, 32])
+			tile[i][y] = Crafty.e("2D, Canvas, " + "grid" + ", Mouse").attr({ x: y, y: i + 1 * y + 1, placed: 0 })
 				.bind("Click", function (e) 
 				{
 					if(this.placed == 0)
@@ -176,6 +181,11 @@ function GenerateGrid()
 						mouseoverlay.destroy();
 					}
 				})
+				.bind('DeleteEntity', function(e)
+				{
+					this.placed = 0;
+					console.log(gridentities[this.y / tileSize][this.x / tileSize].destroy());
+				})
 				.bind('KeyDown', function(e)
 				{
 					if(spriterotationlock == 0)
@@ -228,7 +238,7 @@ function GenerateGrid()
 						spriterotation = 0
 					}
 				});
-			iso.place(i, y * 4, 0, tile);
+			iso.place(i, y * 4, 0, tile[i][y]);
 		}
 	}
 }
@@ -248,32 +258,30 @@ function CameraAdjustments()
 function InitEvents()
 {
 	Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function (e) {
-		if (e.button > 1) return;
+		//if (e.button < 1) return;
 		var base = { x: e.clientX, y: e.clientY };
 
 		function scroll(e) {
 			var dx = base.x - e.clientX,
 				dy = base.y - e.clientY;
+
+				var x = e.realX.toFixed(0)/32;
+				var y = e.realY.toFixed(0)/32;
+
 			base = { x: e.clientX, y: e.clientY };
-
-			if(Crafty.viewport.x > -1248 && dx > 0) //Bound detection on right side
+			console.log(e.MouseButton);
+			if(e.mouseButton == Crafty.mouseButtons.LEFT)
 			{
-				Crafty.viewport.x -= dx/2;
+				var x = tile[Math.trunc(x)][Math.trunc(y)].x / 32;
+				var y = tile[Math.trunc(x)][Math.trunc(y)].y / 32;
+				if(tile[Math.trunc(x)][Math.trunc(y)].placed == 0)
+				{
+					tile[Math.trunc(x)][Math.trunc(y)].trigger("Click");
+				}
 			}
-
-			if(Crafty.viewport.x < -96 && dx < 0) //Bound detection on right side
+			else
 			{
-				Crafty.viewport.x -= dx/2;
-			}
-
-			if(Crafty.viewport.y < -96 && dy < 1) //Bound detection on right side
-			{
-				Crafty.viewport.y -= dy/2;
-			}
-
-			if(Crafty.viewport.y > -2432 && dy > 1) //Bound detection on right side
-			{
-				Crafty.viewport.y -= dy/2;
+				tile[Math.trunc(x)][Math.trunc(y)].trigger("DeleteEntity");
 			}
 
 		};
