@@ -1,5 +1,6 @@
 window.onload = function () {
 	Crafty.init();
+	Crafty.timer.FPS(85)
 	this.LoadSprites() //load sprites
 	this.GenerateGrid() //load world
 	this.CameraAdjustments()//adjust viewport camera
@@ -70,13 +71,18 @@ function LoadSprites()
 	Crafty.sprite(38, 38, "images/menu/item-menu-small-electric-pole.png", {
 		item_menu_small_electric_pole: [0,0, 1, 1]
 	});
+	Crafty.sprite(683, 418, "images/saveMenu/mainMenu.png", {
+		main_menu: [0,0,1,1]
+	});
 
 
 }
 
 var itemlist = [];
 var itemmenu;
+var mainmenu;
 var menuopen = false;
+var mainmenuopen = false;
 var gridentities = [];
 var tile = [];
 
@@ -138,6 +144,7 @@ function GenerateGrid()
 						console.log("Right button");
 						this.placed = 0;
 						console.log(gridentities[this.y / tileSize][this.x / tileSize].destroy());
+						socket.emit('printDelete', {x: this.x/32, y: this.y/32});
 					}
 
 				})
@@ -185,6 +192,7 @@ function GenerateGrid()
 				{
 					this.placed = 0;
 					console.log(gridentities[this.y / tileSize][this.x / tileSize].destroy());
+					socket.emit('printDelete', {x: this.x/32, y: this.y/32});
 				})
 				.bind('KeyDown', function(e)
 				{
@@ -195,7 +203,7 @@ function GenerateGrid()
 						{
 							case Crafty.keys.R:
 								if(currentitem != "small_electric_pole" && currentitem != "wooden_chest" && currentitem != "iron_chest")
-								spriterotation += 90;
+									spriterotation += 90;
 								break;
 							case Crafty.keys.E:
 								if(menuopen == false)
@@ -203,7 +211,7 @@ function GenerateGrid()
 									console.log("x: " + window.innerWidth);
 									console.log("y: " + window.innerHeight);
 									var x = Math.abs(Crafty.viewport.x) + (window.innerWidth / 2) - 222.5;
-									var y = Math.abs(Crafty.viewport.y) + (window.innerHeight / 2) - 210
+									var y = Math.abs(Crafty.viewport.y) + (window.innerHeight / 2) - 210;
 									itemmenu = Crafty.e("2D, Canvas, " + "item_menu").attr({ x: x, y: y, z: 4});
 									menuopen = true;
 									var itemx = x + 24;
@@ -217,8 +225,7 @@ function GenerateGrid()
 									BuildMenu("item_menu_pipe", itemx, itemy + 114, "pipe");
 									BuildMenu("item_menu_pipe_ground", itemx + 38, itemy + 114, "pipe_ground");
 									BuildMenu("item_menu_small_electric_pole", itemx, itemy + 152, "small_electric_pole");
-									
-
+								
 								}
 								else
 								{
@@ -226,6 +233,23 @@ function GenerateGrid()
 									menuopen = false
 								}
 								break;
+							case Crafty.keys.S:
+								socket.emit('savePrint');
+								console.log("Saving Print:");
+								break;
+							case Crafty.keys.ESC:
+								if(mainmenuopen == false)
+								{
+									var x = Math.abs(Crafty.viewport.x) + (window.innerWidth / 2) - 341.5;
+									var y = Math.abs(Crafty.viewport.y) + (window.innerHeight / 2) - 209;
+									mainmenu = Crafty.e("2D, Canvas, " + "main_menu").attr({ x: x, y: y, z: 4});
+									mainmenuopen = true;
+								}
+								else
+								{
+									CleanMenu();
+									mainmenuopen = false;
+								}
 						}
 						mouseicon.origin("center");
 						mouseicon.rotation = spriterotation;
@@ -239,6 +263,8 @@ function GenerateGrid()
 					}
 				});
 			iso.place(i, y * 4, 0, tile[i][y]);
+			
+			
 		}
 	}
 }
@@ -307,13 +333,20 @@ function BuildMenu(item, x, y, itemshorthand)
 
 function CleanMenu()
 {
-	for(var i = 0; i < itemcount; i++)
+	if(menuopen == true)
 	{
-		console.log(i);
-		itemlist[i].destroy();
+		for(var i = 0; i < itemcount; i++)
+		{
+			console.log(i);
+			itemlist[i].destroy();
+		}
+		itemmenu.destroy();
+		menuopen = false;
+		itemcount = 0;
 	}
-	itemmenu.destroy();
-	menuopen = false;
-	itemcount = 0;
+	else
+	{
+		mainmenu.destroy();
+	}
 }
 

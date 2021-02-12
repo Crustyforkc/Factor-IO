@@ -31,12 +31,7 @@ io.on('connection', (socket) =>
 
   curClient++;
   console.log("Current Connections: ", curClient, "/", maxClient);
-  var sql = "INSERT INTO blueprints (id) VALUES ?";
-  var values = [[Math.random() * Math.floor(50000)]];
-  db.query(sql, [values], function (err, result)
-  {
-    if (err) throw err;
-  });
+
 
   socket.on('printInsert', (msg) =>{
     msg.currentitem.replace('_', '-');
@@ -64,12 +59,34 @@ io.on('connection', (socket) =>
     myBlueprint.createEntity(msg.currentitem, {x: msg.x, y: msg.y}, rotation);
   });
 
+  socket.on('printDelete', (msg) =>{
+    console.log('X: ', msg.x);
+    console.log('Y: ', msg.y);
+
+    myBlueprint.removeEntity(myBlueprint.findEntity({x: msg.x, y: msg.y}));
+  });
+
   socket.on('disconnect', ()=> 
   {
 		console.log('user disconnected');
     curClient--;
     console.log(myBlueprint.encode());
-	});
+  });
+  
+  socket.on('savePrint', (msg) => 
+  {
+
+    var sql = "INSERT INTO blueprints (Blueprint, UserId) VALUES ?";
+    var values = [[myBlueprint.encode(), 1]]
+    db.query(sql, [values], function (err, result)
+    {
+      if (err) throw err;
+    });
+		
+    console.log(myBlueprint.encode());
+  });
+  
+
 });
 
 
