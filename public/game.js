@@ -1,3 +1,4 @@
+var LoadingPrints = true;
 window.onload = function () {
 	Crafty.init();
 	Crafty.timer.FPS(85)
@@ -5,6 +6,8 @@ window.onload = function () {
 	this.GenerateGrid() //load world
 	this.CameraAdjustments()//adjust viewport camera
 	this.InitEvents()//add events
+	LoadPrint();
+
 };
 var spriterotation = 0;
 var spriterotationlock = 0;
@@ -85,6 +88,7 @@ var menuopen = false;
 var mainmenuopen = false;
 var gridentities = [];
 var tile = [];
+var textField;
 
 function GenerateGrid()
 {
@@ -103,32 +107,31 @@ function GenerateGrid()
 			tile[i][y] = Crafty.e("2D, Canvas, " + "grid" + ", Mouse").attr({ x: y, y: i + 1 * y + 1, placed: 0 })
 				.bind("Click", function (e) 
 				{
-					if(this.placed == 0)
+					if(this.placed == 0 && menuopen == false)
 					{
 						switch(spriterotation)
 						{
 							case 0:
-								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas, " + currentitem  + ", solid, bush").attr({ x: this.x, y: this.y, z: 2});
+								InsertEntity(this.x, this.y);
 								console.log(gridentities[this.y / tileSize][this.x / tileSize]);
 								break;
 							case 90:
-								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas," + currentitem  + ", solid, bush").attr({ x: this.x, y: this.y, z: 2})
+								InsertEntity(this.x, this.y);
 								console.log(gridentities[this.y / tileSize][this.x / tileSize]);
 								gridentities[this.y / tileSize][this.x / tileSize].origin("center").rotation = spriterotation;
-
 								break;
 							case 180:
-								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas," + currentitem  + ", solid, bush").attr({ x: this.x, y: this.y, z: 2})
+								InsertEntity(this.x, this.y);
 								console.log(gridentities[this.y / tileSize][this.x / tileSize]);
 								gridentities[this.y / tileSize][this.x / tileSize].origin("center").rotation = spriterotation;
 								break;
 							case 270:
-								gridentities[this.y / tileSize][this.x / tileSize] = Crafty.e("2D, Canvas," + currentitem  + ", solid, bush").attr({ x: this.x, y: this.y, z: 2})
+								InsertEntity(this.x, this.y);
 								console.log(gridentities[this.y / tileSize][this.x / tileSize]);
 								gridentities[this.y / tileSize][this.x / tileSize].origin("center").rotation = spriterotation;
 								break;	
 						}
-						socket.emit('printInsert', {currentitem: currentitem,x: this.x/32, y: this.y/32, rotation: spriterotation});
+						
 						this.placed = 1;
 					}
 
@@ -193,6 +196,7 @@ function GenerateGrid()
 					this.placed = 0;
 					console.log(gridentities[this.y / tileSize][this.x / tileSize].destroy());
 					socket.emit('printDelete', {x: this.x/32, y: this.y/32});
+					socket.emit('savePrint');
 				})
 				.bind('KeyDown', function(e)
 				{
@@ -234,8 +238,7 @@ function GenerateGrid()
 								}
 								break;
 							case Crafty.keys.S:
-								socket.emit('savePrint');
-								console.log("Saving Print:");
+								GetPrint();
 								break;
 							case Crafty.keys.ESC:
 								if(mainmenuopen == false)
@@ -243,10 +246,13 @@ function GenerateGrid()
 									var x = Math.abs(Crafty.viewport.x) + (window.innerWidth / 2) - 341.5;
 									var y = Math.abs(Crafty.viewport.y) + (window.innerHeight / 2) - 209;
 									mainmenu = Crafty.e("2D, Canvas, " + "main_menu").attr({ x: x, y: y, z: 4});
+									textField = Crafty.e("HTML").attr({x:x + 20, y:y + 375, w:100, h:100, z:6})
+									.append("<body><input type='text' placeholder='Type something...' id='myInput'><button type='button' onclick='SaveText();'>Get Value</button></body>");
 									mainmenuopen = true;
 								}
 								else
 								{
+									textField.destroy();
 									CleanMenu();
 									mainmenuopen = false;
 								}
@@ -347,6 +353,71 @@ function CleanMenu()
 	else
 	{
 		mainmenu.destroy();
+		
+		console.log("Destroying Menu");
 	}
 }
 
+function GetPrint()
+{
+	socket.emit('getPrint');
+	socket.on('returnPrint', (msg) => 
+ 	 {
+		navigator.clipboard.writeText(msg).then(function()
+		{
+			console.log("Writing to clipboard");
+		}, function(err)
+		{
+			console.log("Writing to clipboard FAILED");
+		});
+  	});
+}
+
+
+function SaveText()
+{
+	console.log(document.getElementById("WorldName").value);
+}
+
+socket.on('MultiplayerPrint', (msg) => 
+{
+	console.log('Item: ', msg.currentitem);
+    console.log('X: ', msg.x);
+    console.log('Y: ', msg.y);
+    console.log('Rotation: ', msg.rotation);
+	currentitem = msg.currentitem;
+	tile[msg.x][msg.y].trigger("Click");
+});
+
+function LoadPrint()
+{
+	console.log("LOading print");
+	socket.emit('LoadPrint');
+	socket.on('LoadingPrint', (msg) =>
+	{
+		currentitem = msg.currentitem;
+		tile[msg.position.x][msg.position.y].trigger("Click");
+		console.log("ITEM: ", currentitem);
+		console.log("X:", msg.position.x);
+		console.log("Y:", msg.position.y);
+	})
+
+	console.log("Done Loading");
+	LoadingPrints = false;
+}
+
+function InsertEntity(x, y)
+{
+	gridentities[y / tileSize][x / tileSize] = Crafty.e("2D, Canvas, " + currentitem  + ", solid, bush").attr({ x: x, y: y, z: 2});
+
+	if(LoadingPrints == false)
+	{
+		console.log(LoadingPrints);
+		if(currentitem == 'pipe_ground')
+			socket.emit('printInsert', {currentitem: 'pipe-to-ground',x: x/32, y: y/32, rotation: spriterotation});
+		else
+			socket.emit('printInsert', {currentitem: currentitem,x: x/32, y: y/32, rotation: spriterotation});
+
+		socket.emit('savePrint');
+	}
+}

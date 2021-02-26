@@ -7,6 +7,7 @@ const host = '0.0.0.0';
 var http = require('http').createServer(app);
 var db = require('./db');
 const { stringify } = require('querystring');
+const e = require('express');
 
 
 
@@ -25,16 +26,21 @@ const io = require('socket.io')(server);
 
 var maxClient = 5;
 var curClient = 0;
+const myBlueprint = new Blueprint();
 io.on('connection', (socket) => 
 {
-  const myBlueprint = new Blueprint();
-
   curClient++;
   console.log("Current Connections: ", curClient, "/", maxClient);
 
 
   socket.on('printInsert', (msg) =>{
-    msg.currentitem.replace('_', '-');
+    
+    try{
+      msg.currentitem.replace('_', '-');
+    }
+    catch(err){
+
+    }
     console.log('Item: ', msg.currentitem);
     console.log('X: ', msg.x);
     console.log('Y: ', msg.y);
@@ -55,14 +61,14 @@ io.on('connection', (socket) =>
         rotation = Blueprint.UP;
         break;
     }
-
-    myBlueprint.createEntity(msg.currentitem, {x: msg.x, y: msg.y}, rotation);
+    if(myBlueprint.findEntity({x: msg.x,y: msg.y}) == null)
+    {
+      myBlueprint.createEntity(msg.currentitem, {x: msg.x, y: msg.y}, rotation);
+      io.emit("MultiplayerPrint", msg);
+    }
   });
 
   socket.on('printDelete', (msg) =>{
-    console.log('X: ', msg.x);
-    console.log('Y: ', msg.y);
-
     myBlueprint.removeEntity(myBlueprint.findEntity({x: msg.x, y: msg.y}));
   });
 
@@ -70,23 +76,34 @@ io.on('connection', (socket) =>
   {
 		console.log('user disconnected');
     curClient--;
-    console.log(myBlueprint.encode());
+
   });
   
   socket.on('savePrint', (msg) => 
   {
-
+    console.log("Saving Print");
     var sql = "INSERT INTO blueprints (Blueprint, UserId) VALUES ?";
     var values = [[myBlueprint.encode(), 1]]
     db.query(sql, [values], function (err, result)
     {
       if (err) throw err;
     });
-		
-    console.log(myBlueprint.encode());
+
+  });
+
+  socket.on('getPrint', (msg) => 
+  {
+    socket.emit("returnPrint", myBlueprint.encode());
+  });
+
+  socket.on('LoadPrint', (msg) =>
+  {
+    myBlueprint.entities.forEach(element => {
+      element.currentitem = element.name;
+        socket.emit('LoadingPrint', element);   
+    });
   });
   
-
 });
 
 
