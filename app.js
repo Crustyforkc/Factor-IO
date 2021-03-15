@@ -29,6 +29,7 @@ var curClient = 0;
 const myBlueprint = new Blueprint();
 io.on('connection', (socket) => 
 {
+
   curClient++;
   console.log("Current Connections: ", curClient, "/", maxClient);
 
@@ -102,6 +103,27 @@ io.on('connection', (socket) =>
       element.currentitem = element.name;
         socket.emit('LoadingPrint', element);   
     });
+  });
+
+  socket.on('Login', (msg) =>
+  {
+    var sql = "SELECT id FROM accounts WHERE username = 'crusty'";
+    var userID;
+    db.query(sql, function (err, result, fields)
+    {
+      if (err) throw err;
+      console.log(result[0].id);
+      userID = result[0].id;
+
+      var sql = "SELECT * FROM blueprints WHERE UserId = " + userID;
+      db.query(sql, function (err, result, fields)
+      {
+        if (err) throw err;
+        console.log(result[0]);
+      });
+    });
+
+
   });
   
 });
