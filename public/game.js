@@ -1,13 +1,14 @@
 var LoadingPrints = true;
 window.onload = function () {
 	Crafty.init();
-	Crafty.timer.FPS(85)
+	Crafty.timer.FPS(30)
 	this.LoadSprites() //load sprites
 	this.GenerateGrid() //load world
 	this.CameraAdjustments()//adjust viewport camera
 	this.InitEvents()//add events
 	LoadPrint();
 	LogIn();
+	Crafty.trigger("Click");
 
 };
 var spriterotation = 0;
@@ -385,14 +386,7 @@ function GetPrint()
 	socket.emit('getPrint');
 	socket.on('returnPrint', (msg) => 
  	 {
-		console.log(msg);
-		navigator.clipboard.writeText(msg).then(function()
-		{
-			console.log("Writing to clipboard");
-		}, function(err)
-		{
-			console.log("Writing to clipboard FAILED");
-		});
+		copyStringToClipboard(msg);
   	});
 }
 
@@ -463,5 +457,21 @@ function InsertEntity(x, y)
 function LogIn()
 {
 	socket.emit('Login', {username: 'crusty', password: 'password'});
-
 }
+
+function copyStringToClipboard (str) {
+	// Create new element
+	var el = document.createElement('textarea');
+	// Set value (string to be copied)
+	el.value = str;
+	// Set non-editable to avoid focus and move outside of view
+	el.setAttribute('readonly', '');
+	el.style = {position: 'absolute', left: '-9999px'};
+	document.body.appendChild(el);
+	// Select text inside element
+	el.select();
+	// Copy text to clipboard
+	document.execCommand('copy');
+	// Remove temporary element
+	document.body.removeChild(el);
+ }

@@ -21,7 +21,7 @@ app.get('/', (req, res) =>
 	//console.log(myBlueprint.encode());
 });
 
-const server = app.listen(process.env.PORT || 3000, host, () => console.log("Server is running..."));
+const server = app.listen(process.env.PORT || 10101, host, () => console.log("Server is running..."));
 const io = require('socket.io')(server);
 
 var maxClient = 5;
@@ -77,6 +77,7 @@ io.on('connection', (socket) =>
   {
 		console.log('user disconnected');
     curClient--;
+    console.log(myBlueprint)
 
   });
   
