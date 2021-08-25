@@ -1,1 +1,4 @@
 # Factor-IO
+
+## Description
+The PC game “Factorio” requires players to build complex logistical structures with significant input and output requirements. These structures are built within the game using gathered resources while fending off enemies. The game has a built-in blueprint mechanic that allows players to import or export structures built in the form of a string. For my Senior Project, I propose creating a web application that would allow players to design and blueprint their creation in a paint like environment and export them into the game using the blue-print mechanic. This would enable players to develop structures faster while also avoiding wasting valuable materials within the game environment. Creations would be saved to a database in order for the web app to be persistent. It will also have a collaborative option similar to something like google docs to satisfy the network requirement.
